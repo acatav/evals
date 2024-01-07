@@ -25,8 +25,9 @@ if __name__ == '__main__':
     index_name = "amnon-nq-evals-demo"
 
     for arg in args:
-        if not os.path.isfile(f"results_nq_faith/top_k={arg.top_k}_reranker={arg.reranker}_top_n={arg.top_n}_th=0.85.jsonl"):
+        out_path = f"{out_dir}/top_k={arg.top_k}_reranker={arg.reranker}_top_n={arg.top_n}.jsonl"
+        if not os.path.isfile(out_path):
             main(["canopy",
               "nq-fact",
               "--completion_args", f"top_k={arg.top_k},index_name={index_name},reranker={arg.reranker},top_n={arg.top_n}",
-              "--record_path", f"{out_dir}/top_k={arg.top_k}_reranker={arg.reranker}_top_n={arg.top_n}.jsonl"])
+              "--record_path", out_path])

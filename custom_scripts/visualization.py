@@ -43,7 +43,9 @@ def process_files(directory):
     return pd.DataFrame(data)
 
 
-df = process_files('../results_nq')
+root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+df = process_files(os.path.join(root_dir, 'results_nq'))
+
 plt.figure(figsize=(10, 6))
 sns.lineplot(data=df, x='top_k', y='score', hue='reranker', linestyle='--', marker='o')
 plt.title('Faithfulness vs top_k - NQ')
