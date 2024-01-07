@@ -7,6 +7,7 @@ from typing import Any, Optional, Union
 
 import evals
 import evals.record
+from evals import OpenAIChatCompletionFn
 from evals.elsuite.modelgraded.classify_utils import classify, sample_and_concat_n_completions
 from evals.elsuite.utils import PromptFn, scrub_formatting_from_prompt
 
@@ -26,8 +27,9 @@ class ModelBasedClassify(evals.Eval):
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
-        # treat last completion_fn as eval_completion_fn
-        self.eval_completion_fn = self.completion_fns[-1]
+        # Amnon: we hack this because the original code uses the CanopyCompletionFn for classification (canopy)
+        self.eval_completion_fn = OpenAIChatCompletionFn(model="gpt-3.5-turbo")
+
         if len(self.completion_fns) > 1:
             self.completion_fns = self.completion_fns[:-1]
         n_models = len(self.completion_fns)
@@ -96,7 +98,10 @@ class ModelBasedClassify(evals.Eval):
         if self.metaeval:
             assert "choice" in test_sample
             metrics["metascore"] = choice == test_sample["choice"]
-
+        evals.record.record_match(correct=choice in ["A", "B"],
+                                  picked=choice,
+                                  completion=completions["completion"],
+                                  **test_sample)
         evals.record.record_metrics(**metrics)
 
         return choice

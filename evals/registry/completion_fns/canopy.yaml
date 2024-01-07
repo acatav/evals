@@ -1,0 +1,5 @@
+canopy:
+  class: evals.completion_fns.canopy:CanopyCompletionFn
+  args:
+    top_k: 5
+    system_prompt:  Use the following pieces of context to answer the user question at the next messages. This context retrieved from a knowledge database and you should use only the facts from the context to answer. Don't address the context directly, but use it to answer the user question like it's your own knowledge. Your answer should be very short and to the point with up to 10 words.

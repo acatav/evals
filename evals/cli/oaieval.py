@@ -5,7 +5,7 @@ import argparse
 import logging
 import shlex
 import sys
-from typing import Any, Mapping, Optional, Union, cast
+from typing import Any, Mapping, Optional, Union, cast, List
 
 import evals
 import evals.api
@@ -257,17 +257,19 @@ def build_recorder(
     )
 
 
-def main() -> None:
+def main(args: Optional[List[str]] = None) -> None:
     parser = get_parser()
-    args = cast(OaiEvalArguments, parser.parse_args(sys.argv[1:]))
+    if args is None:
+        args = sys.argv[1:]
+    parsed_args = cast(OaiEvalArguments, parser.parse_args(args))
     logging.basicConfig(
         format="[%(asctime)s] [%(filename)s:%(lineno)d] %(message)s",
         level=logging.INFO,
-        filename=args.log_to_file if args.log_to_file else None,
+        filename=parsed_args.log_to_file if parsed_args.log_to_file else None,
     )
     logging.getLogger("openai").setLevel(logging.WARN)
 
-    run(args)
+    run(parsed_args)
 
 
 if __name__ == "__main__":

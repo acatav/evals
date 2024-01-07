@@ -1,0 +1,9 @@
+nq-fact:
+  id: nq-fact.dev.v0
+  metrics: [accuracy]
+nq-fact.dev.v0:
+  class: evals.elsuite.modelgraded.classify:ModelBasedClassify
+  args:
+    samples_jsonl: nq_fact/context_samples_200.jsonl
+    eval_type: cot_classify
+    modelgraded_spec: faithfulness
